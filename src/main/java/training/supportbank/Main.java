@@ -7,33 +7,54 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.nio.file.Files;
 import java.util.ArrayList;
+
+
 public class Main {
     public static void main(String args[]) throws IOException {
         // Your code here!
         // System.out.println("Test!");
         String fileName = "Transactions2014.csv";
-
         BookOfAccounts book = new BookOfAccounts();
-        int counter = 1;
 
         try (Scanner scanner = new Scanner(Paths.get(fileName))) {
             scanner.nextLine();
 
             while (scanner.hasNextLine()) {
                 decompose(scanner.nextLine(), book);
-                counter++;
-                System.out.println(counter);
-                System.out.println(book.getAccount("Jon A"));
             }
         } catch (Exception e) {
             System.out.println("Error : " + e.getMessage());
         }
 
+        Scanner sc = new Scanner(System.in);
 
+        // loop to ask for user interactions
+        while (true) {
+            System.out.println("Please select options by typing the following:");
+            System.out.println("'List All' - to print the account balance of everyone.");
+            System.out.println("'List [Account]' - where Account is the name of the person you wish to see their log. ");
+            System.out.println("Enter nothing to exit");
+            String input = sc.nextLine();
 
+            // break condition
+            if (input.isEmpty()) {
+                break;
+            }
 
-        System.out.println(book);
-        System.out.println(book.getAccount("Jon A").getLog());
+            if (input.equals("List All")) {
+                System.out.println(book);
+            }
+
+            if (input.contains("List")) {
+                String temp = input.substring(4,input.length()).trim();
+                if (book.getNames().contains(temp)) {
+                    System.out.println(book.getAccount(temp));
+                    System.out.println(book.getAccount(temp).getLog());
+                }
+            }
+        }
+        //System.out.println(book);
+        //System.out.println(book.getAccount("Jon A").getLog());
 
 
     }
@@ -52,15 +73,10 @@ public class Main {
             }
         }
 
-
         Account client = book.getAccount(parts[1]);
         Account worker = book.getAccount(parts[2]);
         client.makePayment(amount, transaction);
         worker.receivePayment(amount, transaction);
-
-
-
-
 
         }
 

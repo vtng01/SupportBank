@@ -20,9 +20,7 @@ public class BookOfAccounts {
         return book;
     }
 
-    public Account getAccount(String name) {
-        return book.get(name);
-    }
+    public Account getAccount(String name) {return book.get(name);}
 
     public Set<String> getNames() {
         return book.keySet();

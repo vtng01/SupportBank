@@ -1,6 +1,5 @@
 package training.supportbank;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -15,15 +14,11 @@ public class BookOfAccounts {
         book.put(name, a);
     }
 
-    public HashMap<String, Account> getBook() {
-        return book;
-    }
+    public HashMap<String, Account> getBook() { return this.book;}
 
     public Account getAccount(String name) {return book.get(name);}
 
-    public Set<String> getNames() {
-        return book.keySet();
-    }
+    public Set<String> getNames() { return book.keySet(); }
 
     public String toString() {
         String report = "";

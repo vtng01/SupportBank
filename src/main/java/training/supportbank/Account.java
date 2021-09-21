@@ -1,53 +1,51 @@
 package training.supportbank;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
 public class Account {
-    private double balance;
+
+    private BigDecimal balance;
     private String name;
-    private String log;
+    private ArrayList<Transaction> log;
 
     public Account(String initName) {
         this.name = initName;
-        this.balance = 0;
-        this.log = "";
+        this.balance = new BigDecimal(0);
+        this.log = new ArrayList<>();
     }
 
-    public Account(String initName, double initBalance) {
+    public Account(String initName, BigDecimal initBalance) {
         this.name = initName;
         this.balance = initBalance;
-        this.log = "";
     }
 
     public String getName() {
         return this.name;
     }
 
-    public void makePayment(double amount, String transaction) {
-        if (amount > 0) {
+    public void makePayment(BigDecimal amount, Transaction transaction) {
+        if (amount.compareTo(new BigDecimal(0)) >= 0) {
             // making payment means our balance decrease
-            this.balance -= amount;
-            this.log += transaction + "\n";
+            this.balance = this.balance.subtract(amount);
+            this.log.add(transaction);
         }
-
     }
 
-    public void receivePayment(double amount, String transaction) {
-        if (amount > 0) {
+    public void receivePayment(BigDecimal amount, Transaction transaction) {
+        if (amount.compareTo(new BigDecimal(0)) >= 0) {
             // receiving payment means our balance increase
-            this.balance += amount;
-            this.log += transaction + "\n";
+            this.balance = this.balance.add(amount);
+            this.log.add(transaction);
         }
     }
 
-    public String toString() {
-        double temp = Math.round(this.balance * 100.0) / 100.0; // this is to round to 2 dp
-        return this.name + ": " + temp;
-    }
+    public String toString() { return this.name + ": " + this.balance; }
 
-    public String getLog() {
-        return this.log;
-    }
+    public BigDecimal getBalance() { return this.balance; }
 
+    public ArrayList<Transaction> getLog() { return this.log; }
 
-
-
+    public void printLog() { this.log.stream().forEach(System.out::println); }
 }
+

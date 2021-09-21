@@ -16,15 +16,7 @@ public class Main {
         String fileName = "Transactions2014.csv";
         BookOfAccounts book = new BookOfAccounts();
 
-        try (Scanner scanner = new Scanner(Paths.get(fileName))) {
-            scanner.nextLine();
-
-            while (scanner.hasNextLine()) {
-                decompose(scanner.nextLine(), book);
-            }
-        } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
-        }
+        extractData(fileName, book);
 
         Scanner sc = new Scanner(System.in);
 
@@ -57,6 +49,18 @@ public class Main {
         //System.out.println(book.getAccount("Jon A").getLog());
 
 
+    }
+
+    private static void extractData(String fileName, BookOfAccounts book) {
+        try (Scanner scanner = new Scanner(Paths.get(fileName))) {
+            scanner.nextLine();
+
+            while (scanner.hasNextLine()) {
+                decompose(scanner.nextLine(), book);
+            }
+        } catch (Exception e) {
+            System.out.println("Error : " + e.getMessage());
+        }
     }
 
     private static void decompose(String transaction, BookOfAccounts book) {

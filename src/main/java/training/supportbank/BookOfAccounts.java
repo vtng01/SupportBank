@@ -2,7 +2,6 @@ package training.supportbank;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Set;
 
 public class BookOfAccounts {

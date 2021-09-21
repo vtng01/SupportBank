@@ -5,15 +5,15 @@ public class Account {
     private String name;
     private String log;
 
-    public Account(String name) {
-        this.name = name;
+    public Account(String initName) {
+        this.name = initName;
         this.balance = 0;
         this.log = "";
     }
 
-    public Account(String name, double balance) {
-        this.name = name;
-        this.balance = balance;
+    public Account(String initName, double initBalance) {
+        this.name = initName;
+        this.balance = initBalance;
         this.log = "";
     }
 

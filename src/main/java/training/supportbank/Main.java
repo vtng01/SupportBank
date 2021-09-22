@@ -9,7 +9,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.math.BigDecimal;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
 ################## order of event
@@ -31,15 +32,17 @@ public class Main {
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static BookOfAccounts book = new BookOfAccounts();
-    private static String fileName = "DodgyTransactions2015.csv";
+    private static String fileName = "testFile.csv";
 
     public static void main(String args[]) throws IOException {
         LOGGER.log(Level.DEBUG, "Start of program");
-        // Your code here!
-        // System.out.println("Test!");
 
         extractData(fileName);
 
+        UserInterface();
+    }
+
+    private static void UserInterface() {
         Scanner sc = new Scanner(System.in);
 
         // loop to ask for user interactions
@@ -52,14 +55,17 @@ public class Main {
 
             // break condition
             if (input.isEmpty()) {
-                LOGGER.log(Level.INFO, "Exited Program");
+                LOGGER.log(Level.INFO, "Exit Program");
                 break;
             }
 
             if (input.equals("List All")) {
                 System.out.println(book);
                 LOGGER.log(Level.INFO, "Successfully listed all accounts and balance");
-            } else if (input.startsWith("List")) {
+                continue;
+            }
+
+            if (input.startsWith("List")) {
 
                 String accountName = input.substring(4,input.length()).trim();
 
@@ -70,8 +76,10 @@ public class Main {
                     book.getAccount(accountName).printLog(); // to print the log
 
                 } else {
-                    LOGGER.log(Level.WARN, "Invalid account: " + accountName);
+                    LOGGER.log(Level.WARN, "Fail to retrieve: " + accountName);
                 }
+
+                continue;
             }
         }
         // end of loop for user interaction
@@ -80,9 +88,14 @@ public class Main {
     private static void extractData(String fileName) {
         try (Scanner scanner = new Scanner(Paths.get(fileName))) {
             LOGGER.log(Level.INFO, "Successfully opened: " + fileName);
+            // skip the first line
             scanner.nextLine();
-            // counter for current line on the data file
+
+            // counter for current line number
             int counter = 1;
+
+            // counter for current line on the data file
+
             while (scanner.hasNextLine()) {
                 counter++;       // increment line counter
                 generateTransaction(scanner.nextLine(), counter);
@@ -107,8 +120,18 @@ public class Main {
             Date date = myDateFormat.parse(splitData[0]);
             BigDecimal amount =new BigDecimal(splitData[4]);
 
+            // check if names are valid
+            Pattern nameRegex = Pattern.compile("^(?<name>[a-z\\s]+[a-z]$)", Pattern.CASE_INSENSITIVE);
+            Matcher nameMatcherClient = nameRegex.matcher(splitData[1]);
+            Matcher nameMatcherWorker = nameRegex.matcher(splitData[2]);
+            if (!nameMatcherClient.find() | !nameMatcherWorker.find()) {
+                LOGGER.log(Level.ERROR, fileName + ", line " + counter + " invalid name entry");
+                return;
+            }
+
             // once passed set up, proceed to create accounts
             for (String name: Arrays.copyOfRange(splitData,1,3)) {
+                // if account not found then create new account
                 if (!book.getNames().contains(name)) {
                     book.addAccount(name, new Account(name));
                 }
